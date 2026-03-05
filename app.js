@@ -18,7 +18,6 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
-
 const MongoStore = require("connect-mongo").default;
 
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
@@ -44,17 +43,6 @@ app.use(mongoSanitize());
 
 const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
 
-app.use(
-  session({
-    secret,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: dbUrl
-    })
-  })
-);
-
 const sessionConfig = {
     secret,
     resave: false,
@@ -63,7 +51,10 @@ const sessionConfig = {
         httpOnly: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
-    }
+    },
+    store: MongoStore.create({
+      mongoUrl: dbUrl
+    })
 }
 
 app.use(session(sessionConfig));
