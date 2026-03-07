@@ -2,7 +2,7 @@
 
 > A full-stack campground review platform built with Node.js, Express, and MongoDB.
 
-<img width="1495" height="773" alt="image" src="https://github.com/user-attachments/assets/6d532b68-41fc-4805-a766-39b34a6b5681" />
+<img width="1491" height="766" alt="Screenshot 2026-03-07 211151" src="https://github.com/user-attachments/assets/9d95352d-30ee-4ec6-8c84-bc15b5acb5ca" />
 
 
 ---
