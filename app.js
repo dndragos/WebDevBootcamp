@@ -11,6 +11,7 @@ const methodOverride = require('method-override');
 const campgroundRoutes = require('./routes/campground');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
+const adminRoutes = require('./routes/admin');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
@@ -123,6 +124,7 @@ app.use((req, res, next) => {
 app.use('/campgrounds', campgroundRoutes);
 app.use('/campgrounds/:id/reviews', reviewRoutes);
 app.use('/', userRoutes);
+app.use('/admin', adminRoutes);
 
 app.get('/', (req, res) => {
     res.render('home')
@@ -144,5 +146,3 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Serving on port ${port}`)
 })
-
-

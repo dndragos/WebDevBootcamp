@@ -6,12 +6,12 @@ const Review = require('../models/review');
 
 const ExpressError = require('../utils/ExpressError');
 const catchAsync = require('../utils/catchAsync');
-const { validateReview, isLoggedIn, isReviewAuthor } = require('../Middleware.js');
+const { validateReview, isLoggedIn, isReviewAuthorOrAdmin } = require('../Middleware.js');
 
 const reviews = require('../controllers/reviews');
 
 router.post('/', isLoggedIn, validateReview, catchAsync(reviews.createReview));
 
-router.delete('/:reviewId', isLoggedIn, isReviewAuthor, catchAsync(reviews.deleteReview));
+router.delete('/:reviewId', isLoggedIn, isReviewAuthorOrAdmin, catchAsync(reviews.deleteReview));
 
 module.exports = router;

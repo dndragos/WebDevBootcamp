@@ -5,7 +5,7 @@ const Campground = require('../models/campground');
 
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
-const { isAuthor, isLoggedIn, validateCampground } = require('../Middleware.js');
+const { isAuthorOrAdmin, isLoggedIn, validateCampground } = require('../Middleware.js');
 
 const campgrounds = require('../controllers/campgrounds');
 
@@ -21,10 +21,9 @@ router.get('/new', isLoggedIn, campgrounds.renderNewForm);
 
 router.route('/:id')
     .get(catchAsync(campgrounds.showCampground))
-    .put(isLoggedIn, isAuthor, upload.array('image'), validateCampground, catchAsync(campgrounds.updateCampground))
-    .delete(isLoggedIn, isAuthor, catchAsync(campgrounds.deleteCampground));
+    .put(isLoggedIn, isAuthorOrAdmin, upload.array('image'), validateCampground, catchAsync(campgrounds.updateCampground))
+    .delete(isLoggedIn, isAuthorOrAdmin, catchAsync(campgrounds.deleteCampground));
 
-
-router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(campgrounds.renderEditForm));
+router.get('/:id/edit', isLoggedIn, isAuthorOrAdmin, catchAsync(campgrounds.renderEditForm));
 
 module.exports = router;

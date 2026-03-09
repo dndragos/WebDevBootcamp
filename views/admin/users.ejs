@@ -1,0 +1,124 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>All Users</h1>
+    <span class="badge rounded-pill" style="background: var(--forest); font-size: 0.85rem; padding: 0.5rem 1rem;">
+        <%= users.length %> total
+    </span>
+</div>
+
+<div class="table-responsive">
+    <table class="table admin-table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let user of users) { %>
+            <tr>
+                <td class="fw-bold"><%= user.username %></td>
+                <td class="text-muted"><%= user.email %></td>
+                <td>
+                    <% if (user.isSuperAdmin) { %>
+                        <span class="role-badge superadmin">Superadmin</span>
+                    <% } else if (user.isAdmin) { %>
+                        <span class="role-badge admin">Admin</span>
+                    <% } else { %>
+                        <span class="role-badge user">User</span>
+                    <% } %>
+                </td>
+                <td>
+                    <% if (!user._id.equals(currentUser._id)) { %>
+                        <% const canAct = !user.isAdmin && !user.isSuperAdmin || currentUser.isSuperAdmin; %>
+                        <% if (canAct) { %>
+                            <form action="/admin/users/<%= user._id %>/toggle-admin?_method=POST" method="POST" style="display:inline">
+                                <button class="btn btn-sm <%= user.isAdmin ? 'btn-danger' : 'btn-info' %>">
+                                    <%= user.isAdmin ? 'Revoke Admin' : 'Make Admin' %>
+                                </button>
+                            </form>
+                            <form action="/admin/users/<%= user._id %>?_method=DELETE" method="POST" style="display:inline"
+                                onsubmit="return confirm('Delete <%= user.username %>? This will permanently remove all their campgrounds and reviews.')">
+                                <button class="btn btn-sm btn-danger">Delete User</button>
+                            </form>
+                        <% } else { %>
+                            <span class="role-badge admin">Protected</span>
+                        <% } %>
+                    <% } else { %>
+                        <span class="text-muted" style="font-size:0.82rem;">You</span>
+                    <% } %>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+
+<style>
+.admin-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+.admin-table thead tr {
+    background: var(--forest);
+}
+
+.admin-table thead th {
+    color: var(--sand);
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 1rem 1.25rem;
+    border: none;
+}
+
+.admin-table tbody tr {
+    border-bottom: 1px solid var(--mist);
+    transition: background 0.2s ease;
+}
+
+.admin-table tbody tr:hover { background: var(--mist); }
+.admin-table tbody tr:last-child { border-bottom: none; }
+
+.admin-table tbody td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    border: none;
+    color: var(--charcoal);
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.role-badge.admin {
+    background: rgba(196, 123, 74, 0.15);
+    color: var(--bark);
+}
+
+.role-badge.superadmin {
+    background: rgba(30, 58, 47, 0.12);
+    color: var(--forest);
+}
+
+.role-badge.user {
+    background: var(--mist);
+    color: var(--forest-mid);
+}
+</style>

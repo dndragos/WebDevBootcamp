@@ -29,8 +29,17 @@ module.exports.validateCampground = (req, res, next) => {
     }
 }
 
-module.exports.isAuthor = async (req, res, next) => {
+module.exports.isAdmin = (req, res, next) => {
+    if (!req.user || !req.user.isAdmin) {
+        req.flash('error', 'You do not have permission to do that!');
+        return res.redirect('/campgrounds');
+    }
+    next();
+}
+
+module.exports.isAuthorOrAdmin = async (req, res, next) => {
     const { id } = req.params;
+    if (req.user.isAdmin) return next();
     const campground = await Campground.findById(id);
     if (!campground.author.equals(req.user._id)) {
         req.flash('error', 'You do not have permission to do that!');
@@ -39,7 +48,8 @@ module.exports.isAuthor = async (req, res, next) => {
     next();
 }
 
-module.exports.isReviewAuthor = async (req, res, next) => {
+module.exports.isReviewAuthorOrAdmin = async (req, res, next) => {
+    if (req.user.isAdmin) return next();
     const { id, reviewId } = req.params;
     const review = await Review.findById(reviewId);
     if (!review.author.equals(req.user._id)) {
@@ -57,3 +67,10 @@ module.exports.validateReview = (req, res, next) => {
         next();
     }
 };
+module.exports.isSuperAdmin = (req, res, next) => {
+    if (!req.user || !req.user.isSuperAdmin) {
+        req.flash('error', 'You do not have permission to do that!');
+        return res.redirect('/campgrounds');
+    }
+    next();
+}

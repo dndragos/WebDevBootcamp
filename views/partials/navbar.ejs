@@ -11,8 +11,11 @@
                 <a class="nav-link" href="/campgrounds">Campgrounds</a>
                 <a class="nav-link" href="/campgrounds/new">New Campground</a>
             </div>
-            <div class="navbar-nav">
+            <div class="navbar-nav ms-auto">
                 <% if (currentUser) { %>
+                    <% if (currentUser.isAdmin) { %>
+                        <a class="nav-link" href="/admin/users">Admin</a>
+                    <% } %>
                     <a class="nav-link" href="/logout">Logout</a>
                     <% } else { %>
                         <a class="nav-link" href="/login">Login</a>
