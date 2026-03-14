@@ -33,8 +33,7 @@
                 </td>
                 <td>
                     <% if (!user._id.equals(currentUser._id)) { %>
-                        <% const canAct = !user.isAdmin && !user.isSuperAdmin || currentUser.isSuperAdmin; %>
-                        <% if (canAct) { %>
+                        <% if (!user.isSuperAdmin && (!user.isAdmin || currentUser.isSuperAdmin)) { %>
                             <form action="/admin/users/<%= user._id %>/toggle-admin?_method=POST" method="POST" style="display:inline">
                                 <button class="btn btn-sm <%= user.isAdmin ? 'btn-danger' : 'btn-info' %>">
                                     <%= user.isAdmin ? 'Revoke Admin' : 'Make Admin' %>
