@@ -15,7 +15,8 @@ module.exports.toggleAdmin = async (req, res) => {
         req.flash('error', 'You cannot change your own admin status!');
         return res.redirect('/admin/users');
     }
-    if ((user.isAdmin || user.isSuperAdmin) && !req.user.isSuperAdmin) {
+    
+    if (user.isAdmin && !req.user.isSuperAdmin) {
         req.flash('error', 'Only a superadmin can change the status of another admin!');
         return res.redirect('/admin/users');
     }
@@ -37,16 +38,17 @@ module.exports.deleteUser = async (req, res) => {
         req.flash('error', 'You cannot delete your own account!');
         return res.redirect('/admin/users');
     }
-
-    if ((user.isAdmin || user.isSuperAdmin) && !req.user.isSuperAdmin) {
+    if (user.isAdmin && !req.user.isSuperAdmin) {
         req.flash('error', 'Only a superadmin can delete another admin!');
         return res.redirect('/admin/users');
     }
+
     const campgrounds = await Campground.find({ author: userId });
     for (let campground of campgrounds) {
         for (let img of campground.images) {
             await cloudinary.uploader.destroy(img.filename);
         }
+
         await Campground.findByIdAndDelete(campground._id);
     }
 
